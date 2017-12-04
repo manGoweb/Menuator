@@ -1,0 +1,6 @@
+framework module Menuator {
+  umbrella header "Menuator-umbrella.h"
+
+  export *
+  module * { export * }
+}
