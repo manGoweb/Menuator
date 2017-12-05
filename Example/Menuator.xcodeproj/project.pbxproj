@@ -44,6 +44,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		15A896101FD5B49200347281 /* Cartfile */ = {isa = PBXFileReference; lastKnownFileType = text; name = Cartfile; path = ../Cartfile; sourceTree = "<group>"; };
 		40CA04B9F900D2CA25657F84 /* Pods-Menuator_Example.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Menuator_Example.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Menuator_Example/Pods-Menuator_Example.debug.xcconfig"; sourceTree = "<group>"; };
 		4F489E29E1BE7C2BEA446677 /* Pods_Menuator_Example.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Menuator_Example.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		607FACD01AFB9204008FA782 /* Menuator_Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Menuator_Example.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -146,6 +147,7 @@
 				C835FFCAFCBAF7789AF0701B /* Menuator.podspec */,
 				F5956FB9BC33079BF5D78D33 /* README.md */,
 				C8310194E286DD10B19E156C /* LICENSE */,
+				15A896101FD5B49200347281 /* Cartfile */,
 			);
 			name = "Podspec Metadata";
 			sourceTree = "<group>";
