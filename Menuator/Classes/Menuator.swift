@@ -6,6 +6,7 @@
 //  Copyright (c) 2017 Ford. All rights reserved.
 //
 
+import Foundation
 import UIKit
 import SnapKit
 
@@ -19,11 +20,12 @@ public class Menuator: UIView {
     public typealias PerformAction = () -> ()
     public typealias ConfigureLabel = ((_ label: inout UILabel) -> ())
     
-    public var leftMargin: CGFloat = 0 {
+    public var leftMarginOffset: CGFloat = 0 {
         didSet {
             lineView.snp.updateConstraints { (make) in
-                make.left.equalTo(leftMargin)
+                make.left.equalTo(leftMarginOffset)
             }
+            checkInitialFloaterPosition()
             layoutIfNeeded()
             
             collectionView.reloadData()
@@ -39,8 +41,9 @@ public class Menuator: UIView {
         }
     }
     
-    public var itemPadding: CGFloat {
+    public var sidePadding: CGFloat = 0 {
         didSet {
+            checkInitialFloaterPosition()
             collectionView.reloadData()
         }
     }
@@ -102,15 +105,13 @@ public class Menuator: UIView {
     
     // MARK: Initialization
     
-    public init(frame: CGRect = CGRect.zero, leftMargin: CGFloat = 0) {
-        self.leftMargin = leftMargin
+    public init() {
         self.collectionLayout = UICollectionViewFlowLayout.init()
         self.collectionLayout.scrollDirection = .horizontal
         self.collectionView = UICollectionView(frame: CGRect.zero, collectionViewLayout: self.collectionLayout)
-        self.itemPadding = self.itemSpacing
-        self.menuatorController.currentX = (self.itemPadding + leftMargin)
+        self.menuatorController.currentX = (self.sidePadding + leftMarginOffset)
         
-        super.init(frame: frame)
+        super.init(frame: CGRect.zero)
         clipsToBounds = true
 
         configureMenuatorController()
@@ -124,7 +125,7 @@ public class Menuator: UIView {
     
     // MARK: Elements
     
-    public func add(menuItem text: String, configure: ConfigureLabel? = nil, didBecomeActive action: @escaping PerformAction) {
+    public func add(menuItem text: String, configure: ConfigureLabel? = nil, didBecomeActive action: PerformAction? = nil) {
         guard let _ = initialMenuItem else {
             let menuItem =  MenuatorDataController.MenuItem(text: text, configure: configure, action: action)
             configureInitialItem(menuItem: menuItem)
@@ -149,7 +150,7 @@ public class Menuator: UIView {
     private func configureMenuatorController() {
         menuatorController.didTapCell = { indexPath, cellFrame in
             let menuItem = self.menuatorController.menuItems[indexPath.row]
-            menuItem.action()
+            menuItem.action?()
             
             let newX = (cellFrame.origin.x - self.collectionView.contentOffset.x)
             self.menuatorController.currentX = newX
@@ -178,7 +179,7 @@ public class Menuator: UIView {
             self.offsetChanged?(x)
             
             self.lineView.snp.updateConstraints { (make) in
-                var m = (self.leftMargin - x)
+                var m = (self.leftMarginOffset - x)
                 if m < 0 {
                     m = 0
                 }
@@ -188,11 +189,11 @@ public class Menuator: UIView {
         }
         
         menuatorController.padding = {
-            return self.itemPadding
+            return self.sidePadding
         }
         
         menuatorController.leftMargin = {
-            return self.leftMargin
+            return self.leftMarginOffset
         }
     }
     
@@ -223,7 +224,7 @@ public class Menuator: UIView {
     private func configurelineView() {
         addSubview(lineView)
         lineView.snp.makeConstraints { (make) in
-            make.left.equalTo(self.leftMargin)
+            make.left.equalTo(self.leftMarginOffset)
             make.right.equalTo(0)
             make.height.equalTo(self.floatViewHeight)
             make.bottom.equalToSuperview()
@@ -233,10 +234,20 @@ public class Menuator: UIView {
     private func configureFloat(with width: CGFloat) {
         addSubview(floatView)
         floatView.snp.makeConstraints { (make) in
-            make.left.equalTo((self.itemPadding + self.leftMargin))
+            make.left.equalTo((self.sidePadding + self.leftMarginOffset))
             make.width.equalTo(width)
             make.height.equalTo(self.floatViewHeight)
             make.bottom.equalToSuperview()
+        }
+    }
+    
+    private func checkInitialFloaterPosition() {
+        menuatorController.currentX = leftMarginOffset + sidePadding
+        
+        if floatView.superview != nil {
+            floatView.snp.updateConstraints({ (make) in
+                make.left.equalTo((leftMarginOffset + sidePadding))
+            })
         }
     }
 }

@@ -1,0 +1,4 @@
+github "Quick/Nimble" "v7.0.3"
+github "Quick/Quick" "v1.2.0"
+github "SnapKit/SnapKit" "4.0.0"
+github "manGoweb/SpecTools" "1.0.2"
