@@ -1,6 +1,0 @@
-framework module Pods_Menuator_Tests {
-  umbrella header "Pods-Menuator_Tests-umbrella.h"
-
-  export *
-  module * { export * }
-}

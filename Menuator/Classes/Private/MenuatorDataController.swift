@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import UIKit
 
 
 class MenuatorDataController: NSObject {
@@ -17,7 +18,7 @@ class MenuatorDataController: NSObject {
     struct MenuItem {
         let text: String
         let configure: Menuator.ConfigureLabel?
-        let action: Menuator.PerformAction
+        let action: Menuator.PerformAction?
     }
     
     var menuItems: [MenuItem] = []
