@@ -14,7 +14,7 @@ import SpecTools
 @testable import Menuator
 @testable import MenuatorExample
 
-
+// TODO: add tests for insert and remove methods
 class MenuatorTests: QuickSpec {
     
     override func spec() {
@@ -75,12 +75,32 @@ class MenuatorTests: QuickSpec {
                 beforeEach {
                     collectionView.spec.action.tap(item: 0).tap(item: 2)
                 }
-                
+
                 it("should execute action on an element") {
                     expect(subject.tapCounter).to(equal(2))
                 }
             }
-            
+
+            describe("when cell is added") {
+                beforeEach {
+                    subject.add()
+                }
+
+                it("should have the right number of items") {
+                    expect(collectionView.numberOfItems(inSection: 0)).to(equal(27))
+                }
+            }
+
+            describe("when cell is removed") {
+                beforeEach {
+                    subject.remove()
+                }
+
+                it("should have the right number of items") {
+                    expect(collectionView.numberOfItems(inSection: 0)).to(equal(25))
+                }
+            }
+
             describe("MenuatorView") {
                 var label:  UILabel!
                 
