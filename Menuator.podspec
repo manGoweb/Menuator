@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
     s.name             = 'Menuator'
-    s.version          = '0.0.6'
+    s.version          = '0.0.9'
     s.summary          = 'Floating menu & screen management in Swift'
 
     s.description      = <<-DESC
