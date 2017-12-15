@@ -16,16 +16,15 @@ class MenuatorViewPageCell: UICollectionViewCell {
     static let identifier: String = "MenuatorViewPageCell.identifier"
     
     var pageView: UIView? {
-        didSet {
-            guard let pageView = pageView else {
+        willSet {
+            guard let view = newValue else {
                 return
             }
-            
-            contentView.addSubview(pageView)
-            pageView.snp.makeConstraints { (make) in
+            contentView.addSubview(view)
+            view.snp.makeConstraints { (make) in
                 make.edges.equalToSuperview()
             }
         }
     }
-    
+
 }

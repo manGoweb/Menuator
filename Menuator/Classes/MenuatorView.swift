@@ -52,6 +52,8 @@ public class MenuatorView: UIView {
             self.collectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: true)
             self.delegate?.didScrollTo(index: indexPath.item, menuatorView: self)
         }
+
+        menuator.menuatorView = self
         
         configureCollectionView()
     }

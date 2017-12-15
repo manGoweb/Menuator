@@ -35,9 +35,6 @@ extension MenuatorViewDataController: UICollectionViewDelegate, UICollectionView
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MenuatorViewPageCell.identifier, for: indexPath) as! MenuatorViewPageCell
         let menuatorView = collectionView.superview as! MenuatorView
         let pageView = menuatorView.dataSource?.page(index: indexPath.item, menuatorView: menuatorView)
-        if cell.pageView?.superview != nil {
-            cell.pageView!.removeFromSuperview()
-        }
         cell.pageView = pageView
         return cell
     }

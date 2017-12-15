@@ -14,6 +14,10 @@ import SnapKit
 public class Menuator: UIView {
     
     // MARK: - Public interface
+
+    public enum MenuatorErrors: Error {
+        case invalidIndex
+    }
     
     public var lineView = UIView()
     
@@ -131,8 +135,31 @@ public class Menuator: UIView {
             configureInitialItem(menuItem: menuItem)
             return
         }
-        menuatorController.menuItems.append( MenuatorDataController.MenuItem(text: text, configure: configure, action: action))
+        menuatorController.menuItems.append(MenuatorDataController.MenuItem(text: text, configure: configure, action: action))
         collectionView.reloadData()
+        menuatorView?.reloadData()
+    }
+
+    public func insert(menuItem text: String, at index: Int, configure: ConfigureLabel? = nil, didBecomeActive action: PerformAction? = nil) throws {
+        guard let index = menuatorController.menuItems.safe(index: index) else {
+            throw MenuatorErrors.invalidIndex
+        }
+
+        menuatorController.menuItems.insert(MenuatorDataController.MenuItem(text: text, configure: configure, action: action), at: index)
+        collectionView.insertItems(at: [IndexPath(item: index, section: 0)])
+        menuatorView?.reloadData()
+        currentIndex = index
+    }
+
+    public func remove(menuItemAt index: Int) throws {
+        guard let index  = menuatorController.menuItems.safe(index: index) else {
+            throw MenuatorErrors.invalidIndex
+        }
+
+        menuatorController.menuItems.remove(at: index)
+        collectionView.deleteItems(at: [IndexPath(item: index, section: 0)])
+        menuatorView?.reloadData()
+        currentIndex = menuatorController.menuItems.guaranteed(index: index)
     }
     
     // MARK: - Private interface
@@ -144,6 +171,8 @@ public class Menuator: UIView {
     var initialMenuItem: MenuatorDataController.MenuItem?
     
     var selectViewPage: ((IndexPath)->())? // Clicked on a menu item -> View
+
+    weak var menuatorView: MenuatorView?
     
     // MARK: Configure elements
     
@@ -204,6 +233,7 @@ public class Menuator: UIView {
         let width = menuItem.text.width(usingFont: label.font)
         configureFloat(with: width)
         menuatorController.menuItems.append(menuItem)
+        menuatorView?.reloadData()
     }
     
     private func configureCollectionView() {

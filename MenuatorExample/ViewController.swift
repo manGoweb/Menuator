@@ -20,21 +20,24 @@ public class ViewController: UIViewController {
     
     public let menuatorTopPadding: CGFloat = 150
     public let menuatorHeight: CGFloat = 46
-    
+
+    let addButton = UIButton()
+    let removeButton = UIButton()
+
     var tapCounter: Int = 0
     
     
     // MARK: Configure elements
     
     func configureMenuatorWithAllItems() {
-        for string in data.items {
-            menuator.add(menuItem: string, configure: { label in
+        for page in data.pages {
+            menuator.add(menuItem: page.text!, configure: { label in
                 label.font = UIFont.systemFont(ofSize: 16)
                 label.textAlignment = .center
                 label.textColor = .white
             }, didBecomeActive: {
                 self.tapCounter += 1
-                print("Tapped \(string); Tap no.: \(self.tapCounter)")
+                print("Tapped \(page.text!); Tap no.: \(self.tapCounter)")
             })
         }
         
@@ -96,20 +99,24 @@ extension ViewController: MenuatorViewDelegate, MenuatorViewDataSource {
 // MARK: - Data
 
 public struct Data {
+
+    func page(_ s: String) -> UILabel {
+        let label = UILabel()
+        label.text = s
+        label.backgroundColor = .random
+        label.textAlignment = .center
+        label.font = UIFont.boldSystemFont(ofSize: 22)
+        return label
+    }
     
-    let items = ["Lorem", "ipsum", "dolor", "sit", "amet,", "consectetur", "adipiscing", "elit.", "Vestibulum", "tincidunt", "pellentesque", "hendrerit.", "Suspendisse", "eget", "enim", "non", "orci", "ornare", "Jonathan", "and", "his", "best", "buddy", "Ondrej", "rock!", "yeah"]
+    private let items = ["Lorem", "ipsum", "dolor", "sit", "amet,", "consectetur", "adipiscing", "elit.", "Vestibulum", "tincidunt", "pellentesque", "hendrerit.", "Suspendisse", "eget", "enim", "non", "orci", "ornare", "Jonathan", "and", "his", "best", "buddy", "Ondrej", "rock!", "yeah"]
     
-    var pages: [UIView] = []
+    var pages: [UILabel] = []
     var currentPage: Int = 0
     
     init() {
         for s in items {
-            let label = UILabel()
-            label.text = s
-            label.backgroundColor = .random
-            label.textAlignment = .center
-            label.font = UIFont.boldSystemFont(ofSize: 22)
-            pages.append(label)
+            pages.append(page(s))
         }
     }
     
@@ -123,6 +130,8 @@ extension ViewController {
         view.addSubview(menuatorView)
         view.addSubview(leftElement)
         view.addSubview(menuator)
+        view.addSubview(addButton)
+        view.addSubview(removeButton)
         
         leftElement.backgroundColor = .orange
         leftElement.layer.cornerRadius = (menuatorHeight / 2.0)
@@ -142,7 +151,51 @@ extension ViewController {
             make.right.equalTo(0)
             make.height.equalTo(menuatorHeight)
         }
+
+        addButton.setTitle("Add", for: .normal)
+        addButton.addTarget(self, action: #selector(add), for: .touchUpInside)
+        addButton.layer.borderWidth = 1
+        addButton.layer.borderColor = UIColor.white.cgColor
+        addButton.layer.cornerRadius = 6
+        addButton.snp.makeConstraints { (make) in
+            make.left.equalTo(20)
+            make.width.equalTo(90)
+            make.height.equalTo(44)
+            make.bottom.equalTo(-60)
+        }
+
+        removeButton.setTitle("Remove", for: .normal)
+        removeButton.addTarget(self, action: #selector(remove), for: .touchUpInside)
+        removeButton.layer.borderWidth = addButton.layer.borderWidth
+        removeButton.layer.borderColor = addButton.layer.borderColor
+        removeButton.layer.cornerRadius = addButton.layer.cornerRadius
+        removeButton.snp.makeConstraints { (make) in
+            make.right.equalTo(-20)
+            make.width.height.bottom.equalTo(addButton)
+        }
     }
     
+}
+
+extension ViewController {
+
+    @objc func add() {
+        let s = "Added"
+        data.pages.insert(data.page(s), at: 1)
+        try? menuator.insert(menuItem: s, at: 1)
+    }
+
+    @objc func remove() {
+        do {
+            data.pages.remove(at: 1)
+            try menuator.remove(menuItemAt: 1)
+        }
+        catch {
+            let alert = UIAlertController(title: "Menuator", message: "Out of bounds", preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
+            present(alert, animated: true)
+        }
+    }
+
 }
 
